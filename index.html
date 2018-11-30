@@ -1,0 +1,80 @@
+<html>
+<head>
+<title>Test</title>
+</head>
+<body>
+    <form id="frm1">
+        Veteran's first name:<input id="firstname" type="text"><br>
+        Veteran's last name:<input id="lastname" type="text"><br>
+        Veteran's branch:
+        <select id="branch">
+            <option value="Army">Army</option>
+            <option value="Marine Corps">Marine Corps</option>
+            <option value="Navy">Navy</option>
+            <option value="Air Force">Air Force</option>
+            <option value="Coast Guard">Coast Guard</option>
+            <option value="National Guard">National Guard</option>
+            <option value="other">Other</option>
+            <option value="">I don't know</option>
+        </select><br>
+        Veteran's years of service:<input id="YoS" type="number"><br><br>
+    </form>
+
+    <button onclick="myFunction()">Try it</button>
+
+    <p id="demo"></p>
+    <button onclick="loadClient()">load</button>
+    <button onclick="execute()">execute</button>
+    <script>
+        var data = []
+        function myFunction() {
+            var x = document.getElementById("frm1");
+            var text = "";
+            var i;
+            for (i = 0; i < x.length ;i++) {
+                text += x.elements[i].value + "<br>";
+                data.push(x.elements[i].value)
+            }
+            document.getElementById("demo").innerHTML = text;
+            alert(data)
+        }
+    </script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        /**
+   * Sample JavaScript code for sheets.spreadsheets.values.append
+   * See instructions for running APIs Explorer code samples locally:
+   * https://developers.google.com/explorer-help/guides/code_samples#javascript
+   */
+
+        function loadClient() {
+            gapi.client.setApiKey("AIzaSyCUB5EvRn8T0bhVUqa6RxtcYGBmQmsy-v8");
+            return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/sheets/v4/rest")
+                .then(function() { console.log("GAPI client loaded for API"); },
+                      function(err) { console.error("Error loading GAPI client for API", err); });
+        }
+        // Make sure the client is loaded before calling this method.
+        function execute() {
+            return gapi.client.sheets.spreadsheets.values.append({
+                "spreadsheetId": "1CW138qzgsyRyh5t1xhFj-HdsKlqCBRIjMUajgVrVBLg",
+                "range": "Sheet1",
+                "includeValuesInResponse": false,
+                "insertDataOption": "INSERT_ROWS",
+                "responseDateTimeRenderOption": "FORMATTED_STRING",
+                "responseValueRenderOption": "FORMATTED_VALUE",
+                "valueInputOption": "RAW",
+                "resource": {
+                    "majorDimension": "ROWS",
+                    "values": [data]
+                }
+            })
+                .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);
+            },
+                      function(err) { console.error("Execute error", err); });
+        }
+        gapi.load("client");
+    </script>
+</body>
+</html>
